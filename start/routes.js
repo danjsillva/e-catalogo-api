@@ -31,7 +31,6 @@ Route.delete("/usuarios/:id", "UsuarioController.remove");
 
 Route.get("/produtos", "ProdutoController.fetch").middleware("auth");
 Route.post("/produtos", "ProdutoController.create").middleware("auth");
-Route.put("/produtos", "ProdutoController.update").middleware("auth");
 Route.delete("/produtos/:id", "ProdutoController.remove").middleware("auth");
 
 Route.get("/laboratorios", "LaboratorioController.fetch");
