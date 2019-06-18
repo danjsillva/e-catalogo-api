@@ -51,7 +51,8 @@ const namedMiddleware = {
 */
 const serverMiddleware = [
   // 'Adonis/Middleware/Static',
-  'Adonis/Middleware/Cors'
+  'Adonis/Middleware/Cors',
+  // 'App/Middleware/SetDatabaseConnection'
 ]
 
 Server

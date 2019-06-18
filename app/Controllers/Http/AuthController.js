@@ -1,8 +1,7 @@
 "use strict";
 
 const Database = use("Database");
-
-const Usuario = use("App/Models/Usuario");
+const Hash = use("Hash");
 
 /**
  * Resourceful controller for interacting with auth
@@ -11,10 +10,19 @@ class AuthController {
   /**
    * Do user authentication.
    */
-  async auth({ request, response, auth }) {
+  async auth({ params, request, response, auth }) {
     let { login, senha } = await request.all();
 
-    return await auth.attempt(login, senha);
+    let usuario = await Database.connection(params.db)
+      .table("usuarios")
+      .where("login", login)
+      .first();
+
+    if (!!usuario && (await Hash.verify(senha, usuario.senha))) {
+      return await auth.generate(usuario);
+    }
+
+    return response.status(401).json({ error: "Credentials not found" });
   }
 
   /**

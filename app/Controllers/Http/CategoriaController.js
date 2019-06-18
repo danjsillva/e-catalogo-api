@@ -1,32 +1,28 @@
 "use strict";
 
-const Categoria = use("App/Models/Categoria");
+const Database = use("Database");
 
 class CategoriaController {
   async fetch({ params, request, response, auth }) {
     let { busca } = request.get();
 
-    let categorias = await Categoria.query()
+    return await Database.connection(params.db)
+      .table("categorias")
       .where(function() {
         if (!!busca) {
           this.where("nome", "like", `%${busca}%`);
         }
       })
-      .orderBy("nome", "asc")
-      .fetch();
-
-    return categorias;
+      .orderBy("nome", "asc");
   }
 
   async create({ params, request, response, auth }) {
     try {
       let data = request.all();
-      let categoria = new Categoria();
 
-      categoria.merge(data);
-      await categoria.save();
-
-      return categoria;
+      return await Database.connection(params.db)
+        .table("categorias")
+        .insert(data);
     } catch (error) {
       return response.status(555).json(error);
     }
@@ -34,11 +30,10 @@ class CategoriaController {
 
   async remove({ params, request, response, auth }) {
     try {
-      let categoria = await Categoria.find(params.id);
-
-      await categoria.delete();
-
-      return categoria;
+      return await Database.connection(params.db)
+        .table("categorias")
+        .where("id", params.id)
+        .delete();
     } catch (error) {
       return response.status(555).json(error);
     }

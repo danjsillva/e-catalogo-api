@@ -21,30 +21,27 @@ Route.get("/", () => {
   return { greeting: "Welcome to E-catalogo API" };
 });
 
-Route.post("/auth", "AuthController.auth");
-Route.get("/auth", "AuthController.check");
+Route.group(() => {
+  Route.post("/auth", "AuthController.auth");
+  Route.get("/auth", "AuthController.check");
 
-Route.get("/usuarios", "UsuarioController.fetch");
-Route.post("/usuarios", "UsuarioController.create");
-Route.put("/usuarios/:id", "UsuarioController.update");
-Route.delete("/usuarios/:id", "UsuarioController.remove");
+  Route.get("/usuarios", "UsuarioController.fetch");
+  Route.post("/usuarios", "UsuarioController.create");
+  Route.put("/usuarios/:id", "UsuarioController.update");
 
-Route.get("/produtos", "ProdutoController.fetch");
-Route.post("/produtos", "ProdutoController.create").middleware("auth");
-Route.delete("/produtos/:id", "ProdutoController.remove").middleware("auth");
+  Route.get("/produtos", "ProdutoController.fetch");
+  Route.post("/produtos", "ProdutoController.create");
+  Route.delete("/produtos/:id", "ProdutoController.remove");
 
-Route.get("/laboratorios", "LaboratorioController.fetch");
-Route.post("/laboratorios", "LaboratorioController.create").middleware("auth");
-Route.delete("/laboratorios/:id", "LaboratorioController.remove").middleware(
-  "auth"
-);
+  Route.get("/categorias", "CategoriaController.fetch");
+  Route.post("/categorias", "CategoriaController.create");
+  Route.delete("/categorias/:id", "CategoriaController.remove");
 
-Route.get("/categorias", "CategoriaController.fetch");
-Route.post("/categorias", "CategoriaController.create").middleware("auth");
-Route.delete("/categorias/:id", "CategoriaController.remove").middleware(
-  "auth"
-);
+  Route.get("/laboratorios", "LaboratorioController.fetch");
+  Route.post("/laboratorios", "LaboratorioController.create");
+  Route.delete("/laboratorios/:id", "LaboratorioController.remove");
 
-Route.get("/public/:path/:nome", async function({ response, params }) {
-  response.download(Helpers.publicPath(`${params.path}/${params.nome}`));
-});
+  Route.get("/imagens/:filename", async function({ response, params }) {
+    response.download(Helpers.publicPath(`${params.db}/${params.filename}`));
+  });
+}).prefix("/:db");
